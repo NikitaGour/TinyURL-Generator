@@ -1,70 +1,257 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 🚀 TinyLink – URL Shortener (MERN Stack)
 
-## Available Scripts
+TinyLink is a lightweight, production-ready **URL shortener** application inspired by Bit.ly.
+It allows users to shorten long URLs, track click analytics, view stats, and manage links through an intuitive dashboard.
 
-In the project directory, you can run:
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🌟 Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 🔗 **Short Link Creation**
 
-### `npm test`
+* Convert long URLs into short, shareable codes.
+* Optionally choose a **custom short code** (6–8 alphanumeric characters).
+* Validates URL format before saving.
+* Prevents duplicate short codes (returns **409 Conflict**).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🔁 **Redirection**
 
-### `npm run build`
+* Visiting `/<code>` performs a **302 redirect** to the target URL.
+* Each redirect:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  * Increments total click count
+  * Updates the **last clicked** timestamp
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 🗑️ **Link Management**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* View all your shortened links on the Dashboard.
+* Delete any link.
+* Deleted links return **404 Not Found** on access.
 
-### `npm run eject`
+### 📊 **Stats Page**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+* View detailed analytics for any code:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  * Target URL
+  * Total Clicks
+  * Last Clicked
+  * Created At
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### ❤️ **Quality UI**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+* Clean and responsive layout
+* Loading states, empty states, success & error messages
+* Copy-to-clipboard button
+* Truncated long URLs
+* Consistent UX with Tailwind CSS
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🛠️ Tech Stack
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### **Frontend**
 
-### Code Splitting
+* React.js
+* React Router
+* Tailwind CSS
+* Fetch API
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### **Backend**
 
-### Analyzing the Bundle Size
+* Node.js
+* Express.js
+* MongoDB + Mongoose
+* CORS + dotenv
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### **Deployment**
 
-### Making a Progressive Web App
+* Frontend: Vercel / Netlify / Surge
+* Backend: Render / Railway
+* Database: MongoDB Atlas (or local MongoDB)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## 📁 Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```
+TinyLink/
+│
+├── backend/
+│   ├── models/Link.js
+│   ├── server.js
+│   └── .env
+│
+├── frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   ├── components/
+│   │   └── App.js
+│   ├── public/
+│   └── .env
+│
+└── README.md
+```
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🔌 API Documentation
 
-### `npm run build` fails to minify
+### **Healthcheck**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+GET /healthz
+```
+
+Response:
+
+```json
+{ "ok": true, "version": "1.0" }
+```
+
+---
+
+### **Create Link**
+
+```
+POST /api/links
+Content-Type: application/json
+{
+  "url": "https://example.com",
+  "code": "custom123"  // optional
+}
+```
+
+**Responses**
+
+* `201` – Link created
+* `409` – Code already exists
+* `400` – Invalid URL or invalid code
+
+---
+
+### **Get All Links**
+
+```
+GET /api/links
+```
+
+---
+
+### **Get Stats for One Code**
+
+```
+GET /api/links/:code
+```
+
+---
+
+### **Delete a Link**
+
+```
+DELETE /api/links/:code
+```
+
+---
+
+### **Redirect**
+
+```
+GET /:code
+```
+
+* Returns **302** → redirects to target
+* If deleted or missing → **404**
+
+---
+
+## ⚙️ Environment Variables
+
+Create these files:
+
+### **backend/.env**
+
+```
+PORT=4000
+MONGODB_URI=mongodb://localhost:27017/tinylink
+BASE_URL=http://localhost:4000
+```
+
+### **frontend/.env**
+
+```
+REACT_APP_BASE_URL=http://localhost:4000
+```
+
+---
+
+## 🏃‍♀️ Running Locally
+
+### **1. Backend**
+
+```
+cd backend
+npm install
+npm run dev
+```
+
+### **2. Frontend**
+
+```
+cd frontend
+npm install
+npm start
+```
+
+Open:
+👉 [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 🧪 Manual Test Checklist (as per assignment)
+
+### ✔ 1. `/healthz` returns 200
+
+### ✔ 2. Create link → duplicate returns 409
+
+### ✔ 3. Redirect increments click count
+
+### ✔ 4. Delete removes access → 404
+
+### ✔ 5. UI meets expectations
+
+* Loading states
+* Empty states
+* Error messages
+* Responsive layout
+* Copy button
+* Stats page
+
+---
+
+## 📦 Deployment Steps
+
+### **Backend (Render/Railway)**
+
+* Add environment variables
+* Deploy `backend/` folder
+
+### **Frontend (Vercel/Netlify)**
+
+* Deploy `frontend/` folder
+* Add environment variable
+  `REACT_APP_BASE_URL=https://your-backend-url`
+
+---
+
+
+
+## 👩‍💻 Author
+
+**Nikita Gour**
+
+* 🌐 [https://www.linkedin.com/in/nikita-gour-933539203/](https://www.linkedin.com/in/nikita-gour-933539203/)
+* 📧 [nikitagour533@gmail.com](mailto:nikitagour533@gmail.com)
+
+---
