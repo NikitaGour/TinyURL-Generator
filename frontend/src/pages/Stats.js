@@ -17,7 +17,7 @@ export default function Stats() {
       setLoading(true);
       setError('');
       try {
-        const res = await fetch((BASE ? BASE : '') + `/api/links/${encodeURIComponent(code)}`);
+        const res = await fetch((BASE ? `${BASE}` : '') +  `/api/links/${encodeURIComponent(code)}`);
         const text = await res.text();
         let data;
         try { data = text ? JSON.parse(text) : null; } catch { throw new Error('Invalid JSON'); }
@@ -37,7 +37,7 @@ export default function Stats() {
     // eslint-disable-next-line no-restricted-globals
     if (!window.confirm(`Delete ${code}?`)) return;
     try {
-      const res = await fetch((BASE ? BASE : '') + `/api/links/${encodeURIComponent(code)}`, { method: 'DELETE' });
+      const res = await fetch((BASE ? `${BASE}` : '') +  `/api/links/${encodeURIComponent(code)}`, { method: 'DELETE' });
       const text = await res.text();
       let body;
       try { body = text ? JSON.parse(text) : null; } catch {}

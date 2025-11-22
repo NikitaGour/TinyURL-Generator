@@ -13,7 +13,7 @@ export default function Dashboard() {
   async function fetchLinks() {
     setLoading(true);
     setError('');
-    const urlToCall = (BASE ? BASE : '') + '/api/links';
+    const urlToCall = (BASE ? `${BASE}` : '') + '/api/links';
     try {
       const res = await fetch(urlToCall);
       const text = await res.text();
@@ -40,7 +40,7 @@ export default function Dashboard() {
     if (!window.confirm(`Delete ${code}?`)) return;
 
     try {
-      const res = await fetch((BASE ? BASE : '') + `/api/links/${encodeURIComponent(code)}`, { method: 'DELETE' });
+      const res = await fetch((BASE ? `${BASE}` : '') +  `/api/links/${encodeURIComponent(code)}`, { method: 'DELETE' });
       const text = await res.text();
       let body;
       try { body = text ? JSON.parse(text) : null; } catch {}
